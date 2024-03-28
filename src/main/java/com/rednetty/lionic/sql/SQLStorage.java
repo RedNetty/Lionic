@@ -2,24 +2,23 @@ package com.rednetty.lionic.sql;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.rednetty.lionic.Person;
+import com.rednetty.lionic.population.Person;
 
 import java.lang.reflect.Type;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SQLStorage {
 
     private static final String CREATE_TABLE_SQL =
             "CREATE TABLE IF NOT EXISTS people (" +
-                    "    id SERIAL PRIMARY KEY," +
-                    "    serializedPeople TEXT" +
+                    "id SERIAL PRIMARY KEY," +
+                    "serializedPeople TEXT" +
                     ")";
 
     private static final String INSERT_SQL = "INSERT INTO people (serializedPeople) VALUES (?)";
+    private static final String DELETE_SQL = "DELETE FROM people";
     private static final String SELECT_SQL = "SELECT serializedPeople FROM people";
-    private boolean initialized = false;
 
     private final Gson gson = new Gson();
     private final SQLConnector sqlConnector;
@@ -29,59 +28,46 @@ public class SQLStorage {
     }
 
     public void initialize() {
-        if(initialized) return;
         try (Connection connection = sqlConnector.getConnection();
              Statement statement = connection.createStatement()) {
             statement.execute(CREATE_TABLE_SQL);
-
-            storePeople(createFakePeople());
-
-            grabPeople().forEach(person ->
-                    System.out.println("-------------------\nName: " + person.getName() +  "\nAge: " + person.getAge() + "\n-------------------\n"));
-            initialized = true;
         } catch (SQLException e) {
-            System.err.println("Error creating table");
+            System.err.println("Error creating table: " + e.getMessage()); // More informative error
         }
     }
 
-    public ArrayList<Person> createFakePeople() {
-        ArrayList<Person> peopleList = new ArrayList<>();
-        Person john = new Person("john", 24, 2000);
-        Person jim = new Person("jim", 20, 2003);
-        Person jake = new Person("jake", 23, 2001);
-        Person jack = new Person("jack", 19, 2004);
-        peopleList.add(john);
-        peopleList.add(jim);
-        peopleList.add(jake);
-        peopleList.add(jack);
-        return peopleList;
-    }
-    public void storePeople(List<Person> people) {
+    public void storePeople(ArrayList<Person> people) {
         String serializedPeople = gson.toJson(people);
         try (Connection connection = sqlConnector.getConnection();
-             PreparedStatement statement = connection.prepareStatement(INSERT_SQL)) {
-            statement.setString(1, serializedPeople);
-            statement.executeUpdate();
+             PreparedStatement deleteStatement = connection.prepareStatement(DELETE_SQL);
+             PreparedStatement insertStatement = connection.prepareStatement(INSERT_SQL)) {
+
+            deleteStatement.executeUpdate();
+            insertStatement.setString(1, serializedPeople);
+            insertStatement.executeUpdate();
+
         } catch (SQLException e) {
-            System.err.println("Error storing people");
-            e.printStackTrace();
+            System.err.println("Error storing people: " + e.getMessage());
         }
     }
 
-    public List<Person> grabPeople() {
+    public ArrayList<Person> grabPeople() {
         try (Connection connection = sqlConnector.getConnection();
              PreparedStatement statement = connection.prepareStatement(SELECT_SQL)) {
+
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                Type type = new TypeToken<ArrayList<Person>>(){}.getType();
-                return gson.fromJson(resultSet.getString(1), type);
+                String rawJson = resultSet.getString(1);
+                System.out.println("Raw JSON from Database: " + rawJson);
+
+                Type type = new TypeToken<ArrayList<Person>>() {}.getType();
+                return gson.fromJson(rawJson, type);
             } else {
-                return new ArrayList<>();
+                return new ArrayList<>(); // Return empty list if no data found
             }
         } catch (SQLException e) {
-            System.err.println("Error retrieving people");
-            e.printStackTrace();
+            System.err.println("Error retrieving people: " + e.getMessage());
+            return new ArrayList<>(); // More consistent error handling
         }
-        return new ArrayList<>();
     }
 }

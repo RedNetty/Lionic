@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class SQLConfigManager {
 
-    private static final String DEFAULT_FILE_LOCATION = ".\\src\\main\\resources\\sql-config.json";
+    private static final String DEFAULT_FILE_LOCATION = "./src/main/resources/sql-config.json";
     private String sqlFileLocation;
     private DatabaseLogin databaseLogin;
     private Gson gson;

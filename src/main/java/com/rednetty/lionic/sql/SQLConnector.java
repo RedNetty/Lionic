@@ -1,6 +1,5 @@
 package com.rednetty.lionic.sql;
 
-import com.rednetty.lionic.Lionic;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -10,6 +9,7 @@ import java.sql.SQLException;
 public class SQLConnector {
 
     private Connection connection;
+    private SQLStorage sqlStorage;
 
     private DatabaseLogin databaseLogin;
     public void initializeSQL(DatabaseLogin databaseLogin) {
@@ -17,7 +17,8 @@ public class SQLConnector {
         try {
             connect();
             System.out.println("Connection Established with PostgreSQL database!");
-            new SQLStorage(this).initialize();
+            sqlStorage = new SQLStorage(this);
+            sqlStorage.initialize();
         }catch (IOException e) {
             System.err.println("Error while initializing the SQL Connector.");
             e.printStackTrace();
@@ -40,11 +41,20 @@ public class SQLConnector {
         }
         return null;
     }
+
+    public SQLStorage getSqlStorage() {
+
+        return sqlStorage;
+    }
+
+
     public Connection getConnection() throws SQLException {
-        if(connection.isClosed()) try {
-            return connect();
-        }catch (IOException e) {
-            e.printStackTrace();
+        if (connection == null || connection.isClosed()) {
+            try {
+                connection = connect(); // Get a new connection
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return connection;
     }

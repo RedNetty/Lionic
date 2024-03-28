@@ -1,4 +1,4 @@
-package com.rednetty.lionic;
+package com.rednetty.lionic.population;
 
 import java.io.Serializable;
 
