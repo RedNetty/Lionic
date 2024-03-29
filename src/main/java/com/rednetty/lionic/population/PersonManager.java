@@ -75,7 +75,7 @@ public class PersonManager {
 
     public void listPeople() {
        people.forEach(person ->
-                System.out.println("-------------------\nName: " + person.getName() +  "\nAge: " + person.getAge() + "\n-------------------\n"));
+                System.out.println("-------------------\nName: " + person.name() +  "\nAge: " + person.age() + "\n-------------------\n"));
     }
     public void newPerson(Person person) {
         people.add(person);
@@ -89,8 +89,14 @@ public class PersonManager {
      */
     public void removePerson(String name) {
         for (Person person : people) {
-            if(person.getName().equalsIgnoreCase(name)) people.remove(person);
-            return;
+            if(person.name().equalsIgnoreCase(name)){
+                people.remove(person);
+
+                System.out.println("Removed " + person.name() + " from the population.");
+                sqlStorage.storePeople(people);
+                return;
+            }
+
         }
     }
 }

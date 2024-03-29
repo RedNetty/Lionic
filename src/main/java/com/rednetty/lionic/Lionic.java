@@ -9,11 +9,12 @@ public class Lionic {
     private static SQLConfigManager sqlConfig;
     private static PersonManager personManager;
 
-    public Lionic() {
+    public static void main(String[] args) {
         sqlConnector = new SQLConnector();
         sqlConfig = new SQLConfigManager().initialize(sqlConnector);
         personManager = new PersonManager().initialize();
     }
+    public Lionic() {}
 
     public static SQLConfigManager getSqlConfigManager() {
         return sqlConfig;
