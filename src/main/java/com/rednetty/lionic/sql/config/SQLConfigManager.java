@@ -10,21 +10,16 @@ import java.io.IOException;
 public class SQLConfigManager {
 
     private static final String DEFAULT_FILE_LOCATION = "./src/main/resources/sql-config.json";
-    private String sqlFileLocation;
     private DatabaseLogin databaseLogin;
-    private Gson gson;
+    private final Gson gson;
+
 
     public SQLConfigManager() {
-        this(DEFAULT_FILE_LOCATION); // Use a default location
-    }
-
-    public SQLConfigManager(String sqlFileLocation) {
-        this.sqlFileLocation = sqlFileLocation;
         this.gson = new Gson();
     }
 
-    public void initialize(SQLConnector sqlConnector) {
-        try (FileReader reader = new FileReader(sqlFileLocation)) {
+    public SQLConfigManager initialize(SQLConnector sqlConnector) {
+        try (FileReader reader = new FileReader(DEFAULT_FILE_LOCATION)) {
             DatabaseLogin databaseLogin = gson.fromJson(reader, DatabaseLogin.class);
             this.databaseLogin = databaseLogin;
             sqlConnector.initializeSQL(databaseLogin);
@@ -32,6 +27,7 @@ public class SQLConfigManager {
             System.err.println("Error grabbing SQL Configuration File.");
             e.printStackTrace();
         }
+        return this;
     }
 
     public DatabaseLogin getDatabaseLogin() {

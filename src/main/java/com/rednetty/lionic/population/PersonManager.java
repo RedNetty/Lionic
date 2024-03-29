@@ -15,8 +15,9 @@ public class PersonManager {
         people = sqlStorage.grabPeople();
     }
 
-    public void initialize() {
+    public PersonManager initialize() {
        inputPeople();
+        return this;
     }
 
     public void inputPeople() {

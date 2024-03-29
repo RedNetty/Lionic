@@ -36,8 +36,9 @@ public class SQLStorage {
         }
     }
 
-    public void storePeople(ArrayList<Person> people) {
+    private void storePeople(ArrayList<Person> people) {
         String serializedPeople = gson.toJson(people);
+
         try (Connection connection = sqlConnector.getConnection();
              PreparedStatement deleteStatement = connection.prepareStatement(DELETE_SQL);
              PreparedStatement insertStatement = connection.prepareStatement(INSERT_SQL)) {
