@@ -66,6 +66,7 @@ public class PersonManager {
             try {
                 processCommand(command, scanner);
             } catch (Exception e) {
+                e.printStackTrace();
                 LOGGER.error("Error processing command: {}", e.getMessage());
                 System.out.println("An error occurred: " + e.getMessage());
             }
@@ -226,14 +227,15 @@ public class PersonManager {
 
             // Get additional data with type safety
             Double networth = person.getAttribute("networth");
-            Integer birthYear = person.getAttribute("birthYear");
+            Double birthYear = person.getAttribute("birthYear");
+
 
             if (networth != null) {
                 System.out.println("Net Worth: $" + String.format("%,.2f", networth));
             }
 
             if (birthYear != null) {
-                System.out.println("Birth Year: " + birthYear);
+                System.out.println("Birth Year: " + birthYear.intValue());
             }
 
             System.out.println("-------------------");
