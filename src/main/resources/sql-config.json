@@ -1,8 +1,11 @@
 {
   "dbType": "postgresql",
   "hostName": "localhost",
+  "dbName": "lionic",
+  "username": "lionic_user",
+  "password": "your_password",
   "port": 5432,
-  "dbName": "test",
-  "dbUsername": "postgres",
-  "dbPassword": "6F68c2kc"
+  "connectionPoolSize": 10,
+  "connectionTimeout": 30000,
+  "idleTimeout": 600000
 }
