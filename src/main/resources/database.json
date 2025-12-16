@@ -1,0 +1,11 @@
+{
+  "dbType": "postgresql",
+  "hostName": "localhost",
+  "dbName": "postgres",
+  "username": "postgres",
+  "password": "postgres",
+  "port": 5432,
+  "connectionPoolSize": 10,
+  "connectionTimeout": 30000,
+  "idleTimeout": 600000
+}
