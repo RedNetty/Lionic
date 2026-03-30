@@ -1,0 +1,12 @@
+{
+  "_comment": "Copy this file to database.json for local development. Set DB_USERNAME and DB_PASSWORD environment variables for production.",
+  "dbType": "postgresql",
+  "hostName": "localhost",
+  "dbName": "your_database_name",
+  "username": "your_db_username",
+  "password": "your_db_password",
+  "port": 5432,
+  "connectionPoolSize": 10,
+  "connectionTimeout": 30000,
+  "idleTimeout": 600000
+}

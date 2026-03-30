@@ -37,3 +37,16 @@ build/
 ### Logs ###
 *.log
 logs/
+
+### Maven archetype boilerplate ###
+src/main/resources/archetype-resources/
+src/main/resources/META-INF/
+
+### Database config (may contain credentials) ###
+src/main/resources/database.json
+
+### Build artifacts ###
+*.class
+*.jar
+!*-sources.jar
+Thumbs.db
